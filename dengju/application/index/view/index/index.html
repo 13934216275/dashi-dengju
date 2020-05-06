@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/xm_blog/public/static/css/index.css">
+    <title>首页</title>
+</head>
+<style>
+    .head_box :nth-child(1) a{
+        color: #16b0dc;
+    }
+</style>
+<body>
+<header>
+    <a href="">旅行日記</a>
+    <div class="head">
+        <ul class="head_box">
+            {volist name="nav" id="val"}
+            <li><a href="{$val.url}">{$val.name}</a></li>
+            {/volist}
+        </ul>
+    </div>
+</header>
+<div class="content">
+    <div class="banner">
+        {volist name="banner" id="val"}
+        {if condition="$key==0"}
+        <img src="/xm_blog/public/upload/slider/{$val.img}" alt="" style="left: 0">
+        {else/}
+        <img src="/xm_blog/public/upload/slider/{$val.img}" alt="">
+        {/if}
+        {/volist}
+        <div class="bot">
+            {volist name="banner" id="val"}
+            {if condition="$key==0"}
+            <div class="bots bots1"></div>
+            {else/}
+            <div class="bots"></div>
+            {/if}
+            {/volist}
+        </div>
+        <div class="btn-left">&lt;</div>
+        <div class="btn-right">&gt;</div>
+    </div>
+    <div class="info">
+        <div class="qfe_wrapper">
+            <a href="introduction.html" style="display: inline-block;"><img src="/xm_blog/public/static/images/1.jpg" alt="" style="width:100%;"></a>
+
+            <span>About</span>
+        </div>
+        <div class="qfe_wrapper">
+            <a href="blog.html" style="display: inline-block;"><img src="/xm_blog/public/static/images/2.jpg" alt="" style="width:100%;"></a>
+            <span>Blog</span>
+        </div>
+        <div class="qfe_wrapper">
+            <a href="lianxi.html" style="display: inline-block;"><img src="/xm_blog/public/static/images/3.jpg" alt="" style="width:100%;"></a>
+            <span>Gallery</span>
+        </div>
+    </div>
+</div>
+<footer>
+    <img src="/xm_blog/public/static/images/lqfoot.png" alt="">
+    <br>
+    <span>Copyright ©2005-2016 </span>
+    <span>Personal  Website</span>
+</footer>
+</body>
+</html>
+<script src="/xm_blog/public/static/js/animate.js"></script>
+<script src="/xm_blog/public/static/js/index.js"></script>

@@ -1,0 +1,154 @@
+{layout name="admin/index"}
+<div class="col-md-10">
+
+    <ol class="breadcrumb">
+        <li><a href="{:url('index/index')}"><span class="glyphicon glyphicon-home"></span> 首页</a></li>
+        <li><a href="{:url('news/index')}">新闻管理</a></li>
+        <li class="active">新闻列表</li>
+
+        <button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-refresh"></span></button>
+    </ol>
+
+    <!-- 面版 -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="{:url('news/add')}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> 添加新闻</a>
+
+            <p class="pull-right tots">共有 {$tot}条数据</p>
+            <form action="" class="form-inline pull-right">
+                <div class="form-group">
+                    <select name="sort" id="" class="form-control">
+                        <option value="0" {$sort==0?"selected":""}>默认</option>
+                        <option value="1" {$sort==1?"selected":""}>浏览量</option>
+                        <option value="2" {$sort==2?"selected":""}>点赞量</option>
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select name="typeid" id="" class="form-control">
+                        <option value="">全部</option>
+                        {volist name="type" id="val"}
+                        {if condition="$typeid==$val.id"}
+                        <option value="{$val.id}">{$val.name}</option>
+                        {else/}
+                        <option value="{$val.id}">{$val.name}</option>
+                        {/if}
+
+                        {/volist}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="search" value="{$_GET['search']|default=''}" class="form-control" placeholder="请输入你要搜索的内容" id="">
+                </div>
+
+                <input type="submit" value="搜索" class="btn btn-success">
+            </form>
+
+
+        </div>
+        <table class="table-bordered table table-hover" style="text-align: center">
+            <th style="text-align: center">ID</th>
+            <th style="text-align: center">TITLE</th>
+            <th style="text-align: center">AUTHOR</th>
+            <th style="text-align: center">TIME</th>
+            <th style="text-align: center">TYPEID</th>
+            <th style="text-align: center">IMG</th>
+            <th style="text-align: center">INFO</th>
+            <th style="text-align: center">浏览量</th>
+            <th style="text-align: center">新闻点赞量</th>
+            <th style="text-align: center">操作</th>
+            {volist name="list" id="val"}
+            <tr>
+                <td style="text-align: center">{$val.id}</td>
+                <td style="text-align: center">{$val.title}</td>
+                <td style="text-align: center">{$val.author}</td>
+                <td style="text-align: center">{$val.time}</td>
+
+                <td style="text-align: center">{$val.name}</td>
+                <td style="text-align: center">
+                    <img src="/xm_blog/public/upload/news/{$val.img}"  height="50px;" alt="">
+                </td>
+                <td >
+                    <div style="overflow: hidden;text-overflow:ellipsis;white-space:nowrap;width:50px;">{$val.info}</div>
+                </td>
+                <td style="text-align: center">
+                    <input type="number" value="{$val.num}" onchange="sortss(this,{$val.id})" style="display: inline-block;width:50px;" id="nm">
+                    <input type="hidden" value="{$val.img}" id="imghd">
+                </td>
+                <td style="text-align: center">
+                    <input type="number" value="{$val.zannum}" onchange="sortsss(this,{$val.id})" style="display: inline-block;width:50px;" >
+                </td>
+                <td><a href="javascript:;" class="glyphicon glyphicon-zoom-in" onclick="showw(this,{$val.id})"></a>&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:;"  class="glyphicon glyphicon-trash" onclick="delee(this,{$val.id})"></a></td>
+            </tr>
+
+            {/volist}
+
+        </table>
+        <!-- 分页效果 -->
+        <div class="panel-footer">
+            <nav style="text-align:center;">
+                {$list->render()}
+            </nav>
+
+        </div>
+    </div>
+</div>
+
+<script src="/xm_blog/public/static/layer/layer-v3.1.1/layer/layer.js"></script>
+<script>
+    function sortss(obj,id) {
+        let sort=obj.value;
+        $.get("{:url('news/ajax_num')}",{id:id,num:sort},function (res) {
+            if(res.code==200){
+                layer.msg(res.info,{icon:1,time:500},function () {
+                    window.location.reload()
+                })
+            }else{
+                layer.msg(res.info,{icon:2,time:500});
+            }
+        })
+    }
+    function sortsss(obj,id) {
+        let sort=obj.value;
+        $.get("{:url('news/ajax_zannum')}",{id:id,zannum:sort},function (res) {
+            if(res.code==200){
+                layer.msg(res.info,{icon:1,time:500},function () {
+                    window.location.reload()
+                })
+            }else{
+                layer.msg(res.info,{icon:2,time:500});
+            }
+        })
+    }
+    function delee(obj,id) {
+        let img=$('#imghd').val();
+        layer.confirm('确定要删除么？', {
+            btn: ['嗯','不'] //按钮
+        }, function(){
+            $.post("{:url('news/ajax_del')}",{id:id,img:img},function (res) {
+                    if(res.code==200){
+                        layer.msg(res.info, {icon: 1,time:500},function () {
+                            location.reload();
+                        });
+                    }else{
+                        layer.msg(res.info, {icon: 2,time:500},function () {
+                            location.reload();
+                        });
+                    }
+                })
+        }, function(){
+            layer.msg("好的", {icon: 2,time:500},function () {
+                location.reload();
+            });
+        });
+
+    }
+    function showw(obj,id) {
+        $.post("{:url('news/show')}",{id:id},function (res) {
+            $('.col-md-10').html(res);
+        })
+    }
+</script>
+
+

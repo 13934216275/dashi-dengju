@@ -1,0 +1,63 @@
+<div class="form-group">
+    <label for="">管理员姓名</label>
+    <input type="text" name="username" value="{$data.username}" readonly class="form-control editAdmin" placeholder="请输入管理员姓名" id="">
+    <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+    <input type="hidden" name="id" value="{$data.id}" class="form-control editAdmin">
+</div>
+<div class="form-group">
+    <label for="">管理员密码</label>
+    <input type="password" name="password"  class="form-control editAdmin" placeholder="请输入管理员密码" id="">
+    <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+</div>
+<div class="form-group">
+    <label for="">确认密码</label>
+    <input type="password" name="repassword" class="form-control editAdmin" placeholder="请再次输入密码" id="">
+    <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+</div>
+<div class="form-group">
+    <label for="">状态</label>
+    <div>
+        {if condition="($data.status==1)"}
+        <label > <input type="radio" name="status" class="editAdmin" id="" value="1" checked> 白名单 </label>
+        <label > <input type="radio" name="status" class="editAdmin" id="" value="0"> 黑名单</label>
+        {else/}
+        <label > <input type="radio" name="status" class="editAdmin" id="" value="1" > 白名单 </label>
+        <label > <input type="radio" name="status" class="editAdmin" id="" value="0" checked> 黑名单</label>
+        {/if}
+
+    </div>
+</div>
+
+<div class="form-group pull-right">
+    <input type="button" onclick="save()" value="提交" class="btn btn-success">
+    <input type="reset" value="重置" class="btn btn-danger">
+</div>
+
+<div style="clear:both"></div>
+
+<script>
+    function save() {
+        $date=$('.editAdmin').serializeArray()
+        layer.confirm('确定要修改么？', {
+            btn: ['嗯','不'] //按钮
+        }, function(){
+            $.get("{:url('index/ajax_save')}",$date,function (res) {
+                let data=JSON.parse(res);
+                if(data.code==200){
+                    layer.msg(data.info, {icon: 1,time:500},function () {
+                        location.reload();
+                    });
+                }else{
+                    layer.msg(data.info, {icon: 2,time:500},function () {
+                        location.reload();
+                    });
+                }
+            })
+        }, function(){
+            layer.close();
+        });
+
+    }
+
+
+</script>

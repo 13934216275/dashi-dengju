@@ -1,0 +1,181 @@
+{layout name="admin/index"}
+<div class="col-md-10">
+
+    <ol class="breadcrumb">
+        <li><a href="{:url('index/index')}"><span class="glyphicon glyphicon-home"></span> 首页</a></li>
+        <li><a href="{:url('slider/index')}">轮播图管理</a></li>
+        <li class="active">轮播图列表</li>
+
+        <button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-refresh"></span></button>
+    </ol>
+
+    <!-- 面版 -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <button class="btn btn-danger" onclick="del()"><span class="glyphicon glyphicon-trash"></span> 批量删除</button>
+            <a href="#"  data-toggle="modal" data-target="#editPass" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> 添加轮播图</a>
+
+            <p class="pull-right tots">共有 {$tot}条数据</p>
+            <form action="" class="form-inline pull-right">
+                <div class="form-group">
+                    <input type="text" name="search" value="{$_GET['search']|default=''}" class="form-control" placeholder="请输入你要搜索的内容" id="">
+                </div>
+
+                <input type="submit" value="搜索" class="btn btn-success">
+            </form>
+
+
+        </div>
+        <table class="table-bordered table table-hover" style="text-align: center">
+            <th style="text-align: center"><input type="checkbox"  class="all" name="" id=""></th>
+            <th style="text-align: center">ID</th>
+            <th style="text-align: center">name</th>
+            <th style="text-align: center">img</th>
+            <th style="text-align: center">sort</th>
+            <th style="text-align: center">操作</th>
+            {volist name="list" id="val"}
+            <tr>
+                <td><input type="checkbox" imgname="{$val.img}" value="{$val.id}" name="" id=""></td>
+                <td>{$val.id}</td>
+                <td>{$val.name}</td>
+                <td><img src="/xm_blog/public/upload/slider/{$val.img}" alt="" height="50px"></td>
+                <td><input type="text" onchange="sorts(this,{$val.id})" value="{$val.sort}" style="width:50px;"></td>
+                <td><a href="javascript:;" onclick="updt({$val.id})" class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#updataPass" ></a>&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:;" onclick="dele(this,{$val.id})" class="glyphicon glyphicon-trash"></a></td>
+            </tr>
+            {/volist}
+
+        </table>
+        <!-- 分页效果 -->
+        <div class="panel-footer">
+            <nav style="text-align:center;">
+                {$list->render()}
+            </nav>
+
+        </div>
+    </div>
+</div>
+<!-- 添加用户的摸态框 -->
+<div class="modal fade addafter" id="editPass">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">添加用户</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{:url('slider/insert')}" id="addadminform" enctype="multipart/form-data" method="post">
+                    <div class="form-group">
+                        <label for="">轮播图姓名</label>
+                        <input type="text" name="name" required class="form-control addAdmin" placeholder="请输入轮播图姓名" id="">
+                        <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="">轮播图</label>
+                        <input type="file" name="img" required>
+                        <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="">sort</label>
+                        <input type="number" name="sort" required id="">
+                        <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+                    </div>
+                    <div class="form-group pull-right">
+                        <input type="submit" value="提交" class="btn btn-success">
+                        <input type="reset" value="重置" class="btn btn-danger">
+                    </div>
+
+                    <div style="clear:both"></div>
+                </form>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<!-- 修改用户的摸态框 -->
+<div class="modal fade uodtafter" id="updataPass">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">修改用户</h4>
+            </div>
+            <div class="modal-body" id="updtadminbox">
+
+
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<script src="/xm_blog/public/static/layer/layer-v3.1.1/layer/layer.js"></script>
+<script>
+    function updt(id) {
+        $.get("{:url('slider/updt')}",{id:id},function (res) {
+            $('#updtadminbox').html(res);
+        })
+    }
+    function sorts(obj,id) {
+        let sort=obj.value;
+        $.get("{:url('slider/ajax_sort')}",{id:id,sort:sort},function (res) {
+            if(res.code==200){
+                layer.msg(res.info,{icon:1,time:500},function () {
+                    window.location.reload()
+                })
+            }else{
+                layer.msg(res.info,{icon:2,time:500});
+            }
+        })
+    }
+    function dele(obj,id) {
+        $.get("{:url('slider/ajax_del')}",{id:id},function (res) {
+            if(res.code==200){
+                layer.msg(res.info,{icon:1,time:500},function () {
+                    window.location.reload()
+                })
+            }else{
+                layer.msg(res.info,{icon:2,time:500});
+            }
+        })
+    }
+    $(".all[type='checkbox']").click(function () {
+        let $checkbox=$(".all[type='checkbox']").prop("checked");
+        $("[type='checkbox']").not(".all").prop("checked",$checkbox);
+    })
+    function del() {
+        let $checks=$("[type='checkbox']:checked").not(".all");
+        let imgarr=[];
+        let idarr=[];
+        $checks.each(function () {
+            idarr.push($(this).val());
+            imgarr.push($(this).attr('imgname'));
+        });
+        let idstr=idarr.join(",");
+        let imgstr=imgarr.join(",");
+        layer.confirm('确定要删除么？', {
+            btn: ['嗯','不'] //按钮
+        }, function(){
+            $.post("{:url('slider/ajax_delee')}",{imgstr:imgstr,idstr:idstr},function (data) {
+
+                let dd=JSON.parse(data);
+                if(dd.code==200){
+                    layer.msg(dd.info, {icon: 1,time:500},function () {
+                        location.reload();
+                    });
+                }else{
+                    layer.msg(dd.info, {icon: 2,time:500},function () {
+                        location.reload();
+                    });
+                }
+            })
+
+        }, function(){
+            layer.msg("好的", {icon: 2,time:500},function () {
+                location.reload();
+            });
+        });
+
+    }
+</script>

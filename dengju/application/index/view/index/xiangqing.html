@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>旅行日记</title>
+    <link rel="stylesheet" href="/xm_blog/public/static/css/blog.css">
+    <link rel="stylesheet" href="/xm_blog/public/static/css/introduction.css">
+    <script src="/xm_blog/public/static/js/jquery-3.3.1.min.js"></script>
+</head>
+<style>
+    .head_box :nth-child(3) a{
+        color: #16b0dc;
+    }
+</style>
+<body>
+<!--头部开始-->
+<header>
+    <a href="">旅行日記</a>
+    <div class="head">
+        <ul class="head_box">
+
+                {volist name="nav" id="val"}
+                <li><a href="{$val.url}">{$val.name}</a></li>
+                {/volist}
+
+        </ul>
+    </div>
+</header>
+<!--头部结束-->
+<div class="xq_body">
+    <div class="xq_body_left" style="width:100%;">
+        <h3 style=" display: inline-block;">{$data.title}</h3>
+        <div class="xq_time" style=" display: inline-block;float: right;text-align: right">{$data.time}</div>
+        <div class="xq_img" style="width:940px;">
+            <img src="/xm_blog/public/upload/news/{$data.img}" alt="" style="width:100%;">
+        </div>
+        <p>{$data.text}</p>
+
+        <span>
+            {if condition="count($pre)"}
+        {volist name="pre" id="pre"}
+        <a href="{:url('index/xiangqing')}?id={$pre.id}" >上一篇：{$pre.title}</a>
+        {/volist}
+        {else/}
+        <a href="javaScript:;" ><span>上一篇&nbsp;&nbsp;没有了</span></a>
+        {/if}
+        </span>
+        <br>
+        <span>
+            {if condition="count($nex)"}
+            {volist name="nex" id="nex"}
+            <a href="{:url('index/xiangqing')}?id={$nex.id}" >下一篇：{$nex.title}</a>
+            {/volist}
+            {else/}
+            <a href="javaScript:;" ><span>下一篇&nbsp;&nbsp;没有了</span></a>
+            {/if}
+
+        </span>
+    </div>
+   <!-- <div class="xq_body_right">
+        {volist name="type" id="val"}
+        <li class="xq_body_type"><a href="{:url('index/blog')}?id={$val.id}">{$val.name}</a></li>
+        {/volist}
+    </div>-->
+    <div class="clear" style="clear: both"></div>
+</div>
+<!--底部开始-->
+<footer>
+    <img src="/xm_blog/public/static/images/lqfoot.png" alt="" >
+    <br>
+    <span>Copyright ©2005-2016 </span>
+    <span>Personal  Website</span>
+</footer>
+<!--底部结束-->
+</body>
+</html>

@@ -1,0 +1,162 @@
+{layout name="admin/index"}
+<!-- 内容 -->
+<style>
+    .alert{
+        display: none;
+        margin-bottom: 5px;
+        padding: 8px;
+    }
+
+</style>
+<script src="/xm_blog/public/static/layer/layer/layer.js"></script>
+<div class="col-md-10">
+
+    <ol class="breadcrumb">
+        <li><a href="#"><span class="glyphicon glyphicon-home"></span> 首页</a></li>
+        <li><a href="#">评论管理</a></li>
+        <li class="active">评论列表</li>
+
+        <button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-refresh"></span></button>
+    </ol>
+
+    <!-- 面版 -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <button class="btn btn-danger" onclick="shan()"><span class="glyphicon glyphicon-trash"></span> 批量删除</button>
+
+
+            <p class="pull-right tots" >共有 {$tot}  条数据</p>
+            <form action="{:url('News/index')}" class="form-inline pull-right" method="get" >
+
+
+                <div class="form-group">
+                    <input type="text" name="search" class="form-control" placeholder="请输入你要搜索的内容" id="">
+                </div>
+
+
+                <input type="submit" value="搜索" class="btn btn-success">
+            </form>
+
+
+        </div>
+        <table class="table-bordered table table-hover">
+            <th><input type="checkbox" name="" onclick="qx()" class="ALL"></th>
+            <th>ID</th>
+            <th>评论人</th>
+            <th>评论文章标题</th>
+            <th>评论时间</th>
+            <th>评论文章图片</th>
+            <th>评论内容</th>
+            <th>状态</th>
+            {volist name="list" id="val"}
+            <tr>
+                <td>
+                    <input type="checkbox" name=""  value="{$val.id}">
+                </td>
+                <td>{$val.id}</td>
+                <td>{$val.username}</td>
+                <td>{$val.title}</td>
+                <td>{:date("Y-m-d H:i:s",$val.time)}</td>
+                <td><img  style="width: 80px" src="/xm_blog/public/upload/news/{$val.img}" alt=""></td>
+
+                <td>
+                    {$val.content}
+                </td>
+
+                <td>
+                    <select class="form-control" name="status" onchange="gai(this,{$val.id})">
+                        {switch name="$val.status" }
+                        {case value="0" }
+                        <option value=0 selected>未审核</option>
+                        <option value=1>审核成功</option>
+                        <option value=2>审核失败</option>
+                        {/case}
+                        {case value="1"}
+                        <option value=0>未审核</option>
+                        <option value=1 selected>审核成功</option>
+                        <option value=2>审核失败</option>
+                        {/case}
+                        {case value="2"}
+                        <option value=0>未审核</option>
+                        <option value=1>审核成功</option>
+                        <option value=2 selected>审核失败</option>
+                        {/case}
+                        {default /}
+                        <option value=0 selected>未审核</option>
+                        <option value=1>审核成功</option>
+                        <option value=2>审核失败</option>
+                        {/switch}
+
+                    </select>
+                </td>
+            </tr>
+            {/volist}
+
+
+
+        </table>
+        <!-- 分页效果 -->
+        <div class="panel-footer">
+            <nav style="text-align:center;">
+                {$list->render()}
+            </nav>
+
+        </div>
+    </div>
+</div>
+<script>
+    function gai(obj,id) {
+        let zt=$(obj).val();
+        $.post("{:url('Comment/gai')}",{status:zt,id:id},function (res) {
+           if(res.code==200){
+               layer.msg(res.info,{icon:1,time:500},function () {
+                   location.reload()
+               })
+           }else {
+               layer.msg(res.info,{icon:1,time:500})
+           }
+
+        })
+    }
+
+    //批量选择
+    function qx() {
+        let checked=$(".ALL[type=checkbox]").prop("checked");
+        $("[type=checkbox]").not(".ALL").prop("checked",checked);
+    }
+
+    //批量删除
+    function shan() {
+        layer.confirm('是否全部删除？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            let id=$("input:checked").not(".ALL");
+            let ids="0";
+            id.each(function () {
+                ids+=","+$(this).val();
+
+            });
+            $.post("{:url('Comment/shan')}",{id:ids},function (res) {
+                let data=JSON.parse(res);
+                if(data.code==200){
+                    layer.msg(data.info,{icon:1,time:500},function () {
+                        location.reload()
+                    })
+                }else {
+                    layer.msg(data.info,{icon:2,time:500})
+                }
+
+            })
+        }, function(){
+
+        });
+
+    }
+
+
+</script>
+
+
+
+
+

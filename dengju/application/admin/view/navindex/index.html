@@ -1,0 +1,235 @@
+{layout name="admin/index"}
+<div class="col-md-10">
+
+    <ol class="breadcrumb">
+        <li><a href="{:url('index/index')}"><span class="glyphicon glyphicon-home"></span> 首页</a></li>
+        <li><a href="{:url('show/index')}">管理员管理</a></li>
+        <li class="active">管理员列表</li>
+
+        <button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-refresh"></span></button>
+    </ol>
+
+    <!-- 面版 -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <button class="btn btn-danger" onclick="del()"><span class="glyphicon glyphicon-trash"></span> 批量删除</button>
+            <a href="#"  data-toggle="modal" data-target="#editPass" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> 添加管理员</a>
+
+            <p class="pull-right tots">共有 {$tot}条数据</p>
+            <form action="" class="form-inline pull-right">
+                <div class="form-group">
+                    <input type="text" name="search" value="{$_GET['search']|default=''}" class="form-control" placeholder="请输入你要搜索的内容" id="">
+                </div>
+
+                <input type="submit" value="搜索" class="btn btn-success">
+            </form>
+
+
+        </div>
+        <table class="table-bordered table table-hover" style="text-align: center">
+            <th style="text-align: center"><input type="checkbox"  class="all" name="" id=""></th>
+            <th style="text-align: center">ID</th>
+            <th style="text-align: center">NAME</th>
+            <th style="text-align: center">URL</th>
+            <th style="text-align: center">SORT</th>
+            <th style="text-align: center">操作</th>
+            {volist name="nav_list" id="val"}
+            <tr>
+                <td><input type="checkbox" value="{$val.id}" name="" id=""></td>
+                <td>{$val.id}</td>
+                <td>{$val.name}</td>
+                <td>{$val.url}</td>
+                <td>
+                    <input type="text" value="{$val.sort}">
+
+                </td>
+                <td><a href="javascript:;" class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#updataPass" onclick="updt({$val.id})" ></a>&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:;" onclick="dele(this,{$val.id})" class="glyphicon glyphicon-trash"></a></td>
+            </tr>
+            {/volist}
+
+        </table>
+        <!-- 分页效果 -->
+        <div class="panel-footer">
+            <nav style="text-align:center;">
+                {$nav_list->render()}
+            </nav>
+
+        </div>
+    </div>
+</div>
+<!-- 添加用户的摸态框 -->
+<div class="modal fade addafter" id="editPass">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">添加用户</h4>
+            </div>
+            <div class="modal-body">
+                <form action="" id="addnavform">
+                    <div class="form-group">
+                        <label for="">用户姓名</label>
+                        <input type="text" name="name" class="form-control addAdmin" placeholder="请输入姓名" id="">
+                        <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="">地址</label>
+                        <input type="text" name="url" class="form-control addAdmin" placeholder="请输入地址" id="">
+                        <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="">sort</label>
+                        <input type="text" value="" name="sort" class="form-control addAdmin" placeholder="请输入sort" id="">
+                        <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+                    </div>
+
+                    <div class="form-group pull-right">
+                        <input type="button" onclick="ad()" value="提交" class="btn btn-success">
+                        <input type="reset" value="重置" class="btn btn-danger">
+                    </div>
+
+                    <div style="clear:both"></div>
+                </form>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<script src="/xm_blog/public/static/layer/layer-v3.1.1/layer/layer.js"></script>
+<script>
+    $(".all[type='checkbox']").click(function () {
+        let $checkbox=$(".all[type='checkbox']").prop("checked");
+        $("[type='checkbox']").not(".all").prop("checked",$checkbox);
+    });
+    $('.addAdmin[name=name]').blur(function () {
+        let $val=$(this).val();
+        if($val){
+            if($val.length>=6&&$val.length<=12){
+                $.get("{:url('Navindex/ajax_name')}",{name:$val},function(data){
+                    if(data==0){
+                        $('.addAdmin[name=name]').next().hide();
+                        $('.addAdmin[name=name]').attr('isok',1)
+                    }else{
+                        $('.addAdmin[name=name]').next().show().html("用户名已存在");
+                        $('.addAdmin[name=name]').attr('isok',1)
+                    }
+                })
+            }else{
+                $(this).next().show().html("用户名在6-12个字符间");
+                $(this).attr('isok',0)
+            }
+        }else{
+            $(this).next().show().html("请输入用户名");
+            $(this).attr('isok',0)
+        }
+
+    });
+    $('.addAdmin[name=url]').blur(function () {
+        let $val=$(this).val();
+        if($val){
+                $(this).next().hide();
+                $(this).attr('isok',1)
+        }else{
+            $(this).next().show().html("请输入地址");
+            $(this).attr('isok',1)
+        }
+
+    });
+    $('.addAdmin[name=sort]').blur(function () {
+        let $val=$(this).val();
+        if($val){
+            $(this).next().hide()
+            $(this).attr('isok',1)
+        }else{
+            $(this).next().show().html("请输入序号");
+            $(this).attr('isok',0)
+        }
+
+    });
+    function ad() {
+        $('.addAdmin').blur();
+        let $input=$('.addAdmin').length;
+        let tot=0;
+        $('.addAdmin').each(function () {
+            tot+=Number($(this).attr('isok'));
+        });
+        console.log(tot);
+        if(tot==$input){
+            /*var $username=$('.addAdmin[name=username]').val();
+             var $status=$('input[name=status]:checked').val();
+             var $password=$('.addAdmin[name=password]').val();
+             var $repassword=$('.addAdmin[name=repassword]').val();*/
+            var $data=$('#addnavform').serializeArray();
+            $.post("{:url('Navindex/adddata')}",$data,function (data) {
+                let $data=JSON.parse(data);
+                console.log($data);
+                if($data.code==200){
+                    layer.msg($data.info,{icon:1,time:500},function () {
+                        window.location.reload()
+                    })
+
+                }else{
+                    layer.msg($data.info,{icon:1,time:500},function () {
+                        window.location.reload()
+                    })
+                }
+            })
+        }else{
+            layer.msg("添加失败",{icon:1,time:500},function () {
+//                window.location.reload()
+            });
+        }
+    }
+    function del() {
+        let $checks=$("[type='checkbox']:checked").not(".all");
+
+        let str=`0`;
+        $checks.each(function () {
+            str+=','+$(this).val()
+        });
+        layer.confirm('确定要删除么？', {
+            btn: ['嗯','不'] //按钮
+        }, function(){
+            $.post("{:url('Navindex/ajax_del')}",{str:str},function (data) {
+                let dd=JSON.parse(data);
+                if(dd.code==200){
+                    layer.msg(dd.info, {icon: 1,time:500},function () {
+                        location.reload();
+                    });
+                }else{
+                    layer.msg(dd.info, {icon: 2,time:500},function () {
+                        location.reload();
+                    });
+                }
+            })
+
+        }, function(){
+            layer.msg("好的", {icon: 2,time:500},function () {
+                location.reload();
+            });
+        });
+
+    }
+    function dele(obj,id) {
+        layer.confirm('确定要删除么？', {
+            btn: ['嗯','不'] //按钮
+        }, function(){
+            $.post("{:url('Navindex/ajax_del')}",{str:id},function (data) {
+                let dd=JSON.parse(data);
+                if(dd.code==200){
+                    $(obj).parent().parent().remove();
+                    layer.msg(dd.info, {icon: 1,time:500});
+                    layer.close();
+                }else{
+                    layer.msg(dd.info, {icon: 2,time:500});
+                    layer.close();
+                }
+            })
+
+        }, function(){
+            layer.close();
+        });
+    }
+</script>

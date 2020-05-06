@@ -1,0 +1,59 @@
+<?php
+?>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/xm_blog/public/static/admin/bs/css/lock.css">
+    <link rel="stylesheet" href="/xm_blog/public/static/admin/bs/css/bootstrap.css">
+    <title>后台登录</title>
+
+</head>
+<style>
+    .dabox_logo::before{
+        content: '';
+        border: 10px solid #000;
+        position: absolute;
+        left: 0;
+        top: 40px;
+        border-left: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+    }
+    .dabox {
+        background-image: url("/thinkphp_blog/public/static/admin/img/5.jpg");
+
+    }
+</style>
+<body>
+<div class="dabox">
+    <div class="dabox_container flexCenter" style="height:330px;">
+        <div class="dabox_from" style="min-width: 380px;">
+            <form  class="form-horizontal" method="post" action="{:url('login/upup')}">
+                <div class="dabox_logo">博客后台登录管理</div>
+                <div class="divBox">
+                    <img class="dabox_img" src="/xm_blog/public/static/admin/img/11.png" >
+                    <input class="dabox_ipt" type="text" placeholder="请输入账号" name="username" id="dabox_username"></div>
+                <div class="divBox">
+                    <img class="dabox_img" src="/xm_blog/public/static/admin/img/22.png">
+                    <input type="password" placeholder="请输入密码" name="password" class="dabox_ipt" ></div>
+                <!--<div class="divBox">
+                    <div style="width: 80px;line-height: 50px;">验证码</div>
+                    <input type="text" placeholder="请输入验证码" class="dabox_ipt">
+                    <div>{:captcha_img()}</div>
+                </div>-->
+
+                <div class="divBox margin_top60" style="border:none;">
+                    <input class="login_btn" type="submit" value="登录" name="submit">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+<form  id="updtadminform" action="{:url('slider/ajax_save')}"  enctype="multipart/form-data" method="post">
+<input type="hidden" name="id" value="{$data.id}" class="form-control updtAdmin" >
+    <div class="form-group">
+        <label for="">轮播图姓名</label>
+        <input type="text" name="name" value="{$data.name}" required class="form-control updtAdmin" placeholder="请输入轮播图姓名" id="">
+        <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+    </div>
+    <div class="form-group" enctype="multipart/form-data">
+        <label for="">轮播图</label>
+        <input type="file" name="img1" >
+        <input type="hidden" name="imgs" value="{$data.img}" class="form-control updtAdmin" >
+        <p style="line-height: 80px;">
+            <img src="/xm_blog/public/upload/slider/{$data.img}" alt="" height="50px">
+        </p>
+
+        <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+    </div>
+    <div class="form-group">
+        <label for="">sort</label>
+        <input type="number" name="sort" value="{$data.sort}" class="form-control updtAdmin" required id="">
+
+        <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+    </div>
+    <div class="form-group pull-right">
+        <input type="submit" value="提交" class="btn btn-success">
+        <input type="reset" value="重置" class="btn btn-danger">
+    </div>
+
+    <div style="clear:both"></div>
+</form>

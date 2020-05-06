@@ -1,0 +1,136 @@
+{layout name="admin/index"}
+<div class="col-md-10">
+
+    <ol class="breadcrumb">
+        <li><a href="{:url('index/index')}"><span class="glyphicon glyphicon-home"></span> 首页</a></li>
+        <li><a href="{:url('show/index')}">分类管理</a></li>
+        <li class="active">分类列表</li>
+
+        <button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-refresh"></span></button>
+    </ol>
+
+    <!-- 面版 -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="#"  data-toggle="modal" data-target="#editPass" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> 添加分类</a>
+
+
+
+
+        </div>
+        <table class="table-bordered table table-hover" style="text-align: center">
+            <th style="text-align: center">ID</th>
+            <th style="text-align: center">NAME</th>
+            <th style="text-align: center">所属父级分类</th>
+            <th style="text-align: center">PID</th>
+            <th style="text-align: center">操作</th>
+            {volist name="list" id="val"}
+            <tr>
+                <td>{$val.id}</td>
+                <td>{$val.name}</td>
+                <td>
+                    {switch name="val.pid"}
+                        {case value="0"}一级分类{/case}
+                        {case value="1"}男装{/case}
+                        {case value="2"}女装{/case}
+                        {default/}二级分类
+                    {/switch}
+                </td>
+
+                <td>{$val.pid}</td>
+                <td><a href="javascript:;" onclick="updt({$val.id})" class="glyphicon glyphicon-pencil" data-toggle="modal" data-target="#updataPass" ></a>&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:;" onclick="dele(this,{$val.id},)" class="glyphicon glyphicon-trash"></a></td>
+            </tr>
+            {/volist}
+        </table>
+        <!-- 分页效果 -->
+        <div class="panel-footer">
+            <nav style="text-align:center;">
+                {$list->render()}
+            </nav>
+
+        </div>
+    </div>
+</div>
+<!-- 添加用户的摸态框 -->
+<div class="modal fade addafter" id="editPass">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">添加分类</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{:url('types/insert')}" method="post" id="addadminform">
+                    <div class="form-group">
+                        <label for="">父级分类名称</label>
+                        <select class="form-control" name="pid">
+                            <option value="0">一级分类</option>
+                            {volist name="list1" id="val"}
+                            <option value="{$val.id}">{$val.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">分类名称</label>
+                        <input type="text" name="name" class="form-control addAdmin" placeholder="请输入分类名称" id="">
+                        <div class="alert alert-warning" role="alert" style="padding: 10px;display: none"></div>
+                    </div>
+
+
+                    <div class="form-group pull-right">
+                        <input type="submit"  value="提交" class="btn btn-success">
+                        <input type="reset" value="重置" class="btn btn-danger">
+                    </div>
+
+                    <div style="clear:both"></div>
+                </form>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- 修改用户的摸态框 -->
+<div class="modal fade editafter" id="updataPass">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">修改用户</h4>
+            </div>
+            <div class="modal-body" id="editadmin">
+
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<script src="/xm_blog/public/static/layer/layer-v3.1.1/layer/layer.js"></script>
+<script>
+    function dele(obj,id) {
+        layer.confirm('确定要删除么？', {
+            btn: ['嗯','不'] //按钮
+        }, function(){
+            $.post("{:url('types/ajax_del')}",{id:id},function (res) {
+                if(res.code==200){
+                    layer.msg(res.info, {icon: 1,time:500});
+                    $(obj).parent().parent().remove();
+                }else{
+                    layer.msg(res.info, {icon: 2,time:500});
+                }
+            })
+        }, function(){
+            layer.msg('好的', {
+                time: 500, //20s后自动关闭
+                btn: ['明白了', '知道了']
+            });
+        });
+
+    }
+    function updt(id) {
+        $.post("{:url('types/edit')}",{id:id},function (res) {
+            $('#editadmin').html(res);
+        })
+    }
+</script>
+

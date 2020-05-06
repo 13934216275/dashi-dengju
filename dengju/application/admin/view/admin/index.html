@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>博客 后台管理系统</title>
+    <link rel="shortcut icon" href="/xm_blog/public/static/admin/img/8.jpg">
+    <link rel="stylesheet" href="/xm_blog/public/static/admin/bs/css/bootstrap.min.css">
+    <script src="/xm_blog/public/static/admin/bs/js/jquery.min.js"></script>
+    <script src="/xm_blog/public/static/admin/bs/js/bootstrap.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/xm_blog/public/static/ueditor/utf8-php/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/xm_blog/public/static/ueditor/utf8-php/ueditor.all.min.js"> </script>
+    <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+    <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+    <script type="text/javascript" charset="utf-8" src="/xm_blog/public/static/ueditor/utf8-php/lang/zh-cn/zh-cn.js"></script>
+    <style>
+        .navbar-blue{
+            background-color: #ccc;
+        }
+
+        .navbar .navbar-brand{
+            color:black;
+        }
+
+        .navbar .navbar-brand:hover{
+            color:black;
+        }
+
+        .navbar-default .navbar-nav>li>a{
+            color:black;
+        }
+        .navbar-default .navbar-nav>li>a:hover{
+            color:black;
+
+        }
+
+        .body{
+            margin-top:90px;
+        }
+        .list-group{
+            display:none;
+        }
+        .panel-primary>.panel-heading{
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 导航条 -->
+    <nav class="navbar navbar-default navbar-fixed-top navbar-blue" role="navigation">
+        <div class="container-fluid">
+            <!-- 导航logo -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{:url('index/index')}"><img style="display:inline" width="30px" src="/xm_blog/public/static/admin/img/8.jpg" alt="">   博客后台管理系统</a>
+            </div>
+
+            <!-- 出logo以外 -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-refresh"></span>清除缓存</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">后台管理<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#" >{:session('lock_username')}</a></li>
+                            <li><a href="#">前台首页</a></li>
+                            <li><a href="{:url('login/destory')}">退出</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+
+    <!-- 内容区域 -->
+
+    <div class="row body">
+
+        <!-- 菜单 -->
+        <div class="col-md-2">
+
+            <!-- 用户管理-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title"><span class="glyphicon glyphicon-user"></span> 用户管理</h2>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="{:url('User/index')}">用户列表</a></li>
+                    <li class="list-group-item"><a href="{:url('show/index')}">管理员列表</a></li>
+
+                </ul>
+            </div>
+            <!-- 新闻管理 -->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title"><span class="glyphicon glyphicon-tasks"></span> 新闻管理</h2>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="{:url('types/index')}">分类管理</a></li>
+                    <li class="list-group-item"><a href="{:url('news/index')}">新闻管理</a></li>
+                    <li class="list-group-item"><a href="{:url('comment/index')}">评论管理</a></li>
+                </ul>
+            </div>
+            <!-- 系统管理 -->
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title"><span class="glyphicon glyphicon-gift"></span> 系统管理</h2>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="{:url('navindex/index')}">栏目管理</a></li>
+                    <li class="list-group-item"><a href="{:url('slider/index')}">轮播图管理</a></li>
+                    <li class="list-group-item"><a href="{:url('system/index')}">系统配置</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容 -->
+        {__CONTENT__}
+    </div>
+</div>
+
+
+<!-- 修改密码的摸态框 -->
+<div class="modal fade" id="editPass">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <form action="">
+                    <div class="form-group">
+                        <label for="">原密码</label>
+                        <input type="password" name="" class="form-control" placeholder="请输入原密码" id="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">新密码</label>
+                        <input type="password" name="" class="form-control" placeholder="请输入新密码" id="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">确认密码</label>
+                        <input type="password" name="" class="form-control" placeholder="请再次输入密码" id="">
+                    </div>
+                    <div class="form-group pull-right">
+                        <input type="submit" value="提交" class="btn btn-success">
+                        <input type="reset" value="重置" class="btn btn-danger">
+                    </div>
+
+                    <div style="clear:both"></div>
+                </form>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</body>
+<script>
+    // 菜单切换
+    $(".panel-title").click(function(){
+        $(".list-group").hide();
+        $(this).parent().next().toggle(500);
+    });
+
+</script>
+</html>

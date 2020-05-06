@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>简介</title>
+    <link rel="stylesheet" href="/xm_blog/public/static/css/introduction.css">
+</head>
+<style>
+    .head_box :nth-child(2) a{
+        color: #16b0dc;
+    }
+</style>
+<body>
+<!--头部开始-->
+<header>
+    <a href="">旅行日記</a>
+    <div class="head">
+        <ul class="head_box">
+
+                {volist name="nav" id="val"}
+                <li><a href="{$val.url}">{$val.name}</a></li>
+                {/volist}
+
+        </ul>
+    </div>
+</header>
+<!--头部结束-->
+<!--内容开始-->
+<div class="content">
+    <img src="/xm_blog/public/static/images/lq.jpg" alt="">
+    <span>关于我们...</span>
+    <div class="content_box">
+        <span>    爱生活，向往自由的我，对于大海的喜爱程度，远超旁边的想象。虽然没有给自己硬性的定什么“一生中必去多少个目的地，多少个国家”之类的，但有的地方，去过一次，就不想去了，而又得地方，却又像某些路人一样，不期而遇却又记忆犹新。</span>
+        <span>    虽然去过不少海边城市，但这个内陆港，给我最深的印象就是——海鲜，比任何城市都新鲜，都让人难以忘记。尤其是渔民刚从海里打捞出来的，那才叫一个鲜啊！</span>
+    </div>
+</div>
+<!--内容结束-->
+<!--底部开始-->
+<footer>
+    <img src="/xm_blog/public/static/images/lqfoot.png" alt="">
+    <br>
+    <span>Copyright ©2005-2016 </span>
+    <span>Personal  Website</span>
+</footer>
+<!--底部结束-->
+</body>
+</html>
